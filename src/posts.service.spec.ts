@@ -7,16 +7,35 @@ describe('PostsService', () => {
   };
 
   beforeEach(async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2020-01-01T00:00:00.000Z'));
+
     postsService = new PostsService();
 
     postsService.create({ text: 'Some pre-existing post' });
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('should add a new post', () => {
-    // реализуйте тест-кейс
+    const createdPost = postsService.create(post);
+
+    expect(createdPost).toEqual({
+      id: '2',
+      text: 'Mocked post',
+      date: '2020-01-01T00:00:00.000Z',
+    });
+
+    expect(postsService.find(createdPost.id)).toEqual(createdPost);
   });
 
   it('should find a post', () => {
-    // реализуйте тест-кейс
+    expect(postsService.find('1')).toEqual({
+      id: '1',
+      text: 'Some pre-existing post',
+      date: '2020-01-01T00:00:00.000Z',
+    });
   });
 });
